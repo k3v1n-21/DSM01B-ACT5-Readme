@@ -1,1 +1,493 @@
 # DSM01B-ACT5-Readme
+# Sistema multifuncional en Python
+
+Programa de consola desarrollado en Python que integra cuatro módulos:
+
+1. Cotizador de productos.
+2. Sistema de tarifas para un museo.
+3. Registro de ventas durante cinco días.
+4. Calculadora de consumo eléctrico.
+
+El programa utiliza un menú principal para acceder a cada módulo e incluye validaciones para evitar datos incorrectos, como números negativos, valores no numéricos y respuestas distintas de `SI` o `NO`.
+
+---
+
+## Características
+
+### 1. Cotizador de productos
+
+Permite capturar la información de tres productos:
+
+- Nombre.
+- Precio.
+- Cantidad.
+
+Después de ingresar los productos, el programa calcula:
+
+- Subtotal por producto.
+- Subtotal general.
+- IVA del 16%.
+- Total a pagar.
+
+Finalmente, genera un ticket de compra con el desglose de los productos y permite realizar otra cotización.
+
+### 2. Sistema de tarifas de museo
+
+Permite registrar uno o varios visitantes y calcular el costo de entrada según la edad.
+
+Las tarifas utilizadas son:
+
+- Menores de 12 años: `$40.00 MXN`.
+- Personas de 12 a 59 años: `$100.00 MXN`.
+- Personas de 60 años o más: `$60.00 MXN`.
+
+Las personas de 12 a 59 años pueden indicar si son estudiantes. Si la respuesta es `SI`, se aplica un descuento del 25% sobre la tarifa correspondiente.
+
+El módulo muestra:
+
+- Tarifa original.
+- Descuento aplicado.
+- Monto a pagar por visitante.
+- Número total de visitantes.
+- Total general a pagar.
+
+También permite agregar más visitantes y realizar un nuevo cálculo de entradas.
+
+### 3. Registro diario de ventas
+
+Permite registrar ventas correspondientes a cinco días.
+
+Para cada día se pueden capturar múltiples importes. El valor `0` termina la captura del día actual y permite continuar con el siguiente.
+
+Al finalizar, el programa muestra:
+
+- Total vendido en cada día.
+- Día con el mayor total de ventas.
+- Cantidad de ventas registradas.
+- Total acumulado de los cinco días.
+- Promedio por venta.
+- Si existió alguna venta de `$1,000.00` o más.
+
+Si no se registraron ventas, el programa informa que no existe un promedio calculable.
+
+### 4. Calculadora de consumo eléctrico
+
+Calcula el consumo eléctrico a partir de dos lecturas del medidor:
+
+- Lectura anterior.
+- Lectura actual.
+
+El consumo se obtiene mediante la siguiente fórmula:
+
+```text
+Consumo = lectura actual - lectura anterior
+
+IVA = 0.16
+TARIFA_KWH = 2.50
+CUOTA_FIJA = 40.00
+
+LIMITE_BAJO = 140
+LIMITE_MEDIO = 250
+
+LINEA = "=" * 40
+SEPARADOR = "-" * 40
+
+
+def leer_decimal(mensaje):
+    valido = False
+    while valido == False:
+        try:
+            numero = float(input(mensaje))
+            if numero < 0:
+                print("Error: no se aceptan números negativos.")
+            else:
+                valido = True
+        except ValueError:
+            print("Error: ingresa un número válido.")
+    return numero
+
+
+def leer_entero(mensaje):
+    valido = False
+    while valido == False:
+        try:
+            numero = int(input(mensaje))
+            if numero < 0:
+                print("Error: no se aceptan números negativos.")
+            else:
+                valido = True
+        except ValueError:
+            print("Error: ingresa un número entero válido.")
+    return numero
+
+
+def leer_si_no(mensaje):
+    respuesta = input(mensaje)
+    while respuesta != "SI" and respuesta != "NO":
+        print("Error: responde SI o NO (en mayúsculas).")
+        respuesta = input(mensaje)
+    return respuesta
+
+
+def dinero(valor):
+    return f"{valor:.2f}"
+
+
+def mostrar_menu():
+    print()
+    print(LINEA)
+    print("        SISTEMA MULTIFUNCIONAL")
+    print(LINEA)
+    print("1. Cotizador de productos")
+    print("2. Sistema de tarifas de museo")
+    print("3. Registro diario de ventas")
+    print("4. Calculadora de consumo eléctrico")
+    print("0. Salir")
+    print(LINEA)
+
+
+def cotizador():
+    print()
+    print(LINEA)
+    print("      COTIZADOR: CAPTURA DE PRODUCTOS")
+    print(LINEA)
+
+    otro = "SI"
+
+    while otro == "SI":
+
+        print()
+        print(SEPARADOR)
+        print("Producto 1")
+        print(SEPARADOR)
+        nombre1 = input("Nombre: ")
+        precio1 = leer_decimal("Precio: ")
+        cantidad1 = leer_entero("Cantidad: ")
+        print()
+        print(SEPARADOR)
+        print("Producto 2")
+        print(SEPARADOR)
+        nombre2 = input("Nombre: ")
+        precio2 = leer_decimal("Precio: ")
+        cantidad2 = leer_entero("Cantidad: ")
+
+        print()
+        print(SEPARADOR)
+        print("Producto 3")
+        print(SEPARADOR)
+        nombre3 = input("Nombre: ")
+        precio3 = leer_decimal("Precio: ")
+        cantidad3 = leer_entero("Cantidad: ")
+
+        subtotal1 = precio1 * cantidad1
+        subtotal2 = precio2 * cantidad2
+        subtotal3 = precio3 * cantidad3
+
+        subtotal = subtotal1 + subtotal2 + subtotal3
+        iva = subtotal * IVA
+        total = subtotal + iva
+
+        print()
+        print(LINEA)
+        print("              PAPELERÍA")
+        print("          TICKET DE COMPRA")
+        print(LINEA)
+        print(nombre1, "x", cantidad1, ": $", dinero(subtotal1))
+        print(nombre2, "x", cantidad2, ": $", dinero(subtotal2))
+        print(nombre3, "x", cantidad3, ": $", dinero(subtotal3))
+        print(SEPARADOR)
+        print("Subtotal:  $", dinero(subtotal))
+        print("IVA (16%): $", dinero(iva))
+        print(LINEA)
+        print("TOTAL A PAGAR: $", dinero(total))
+        print(LINEA)
+        print("        ¡Gracias por su compra!")
+        print(LINEA)
+
+        otro = leer_si_no("¿Deseas hacer otra cotización? (SI/NO): ")
+
+
+def tarifas_museo():
+    print()
+    print(LINEA)
+    print("       MUSEO: CÁLCULO DE ENTRADAS")
+    print(LINEA)
+
+    repetir = "SI"
+
+    while repetir == "SI":
+        numero = 0
+        total = 0
+        otro = "SI"
+
+        while otro == "SI":
+            numero = numero + 1
+            print()
+            print(SEPARADOR)
+            print("Visitante #", numero)
+            print(SEPARADOR)
+
+            edad = leer_entero("Ingresa la edad del visitante: ")
+
+            es_estudiante = "NO"
+            if edad >= 12 and edad < 60:
+                es_estudiante = leer_si_no("¿Es estudiante? (SI/NO): ")
+
+            descuento = 0
+            if edad < 12:
+                tarifa = 40
+            elif edad < 60:
+                tarifa = 100
+                if es_estudiante == "SI":
+                    descuento = tarifa * 0.25
+            else:
+                tarifa = 60
+
+            precio = tarifa - descuento
+            print(SEPARADOR)
+            print("Tarifa original: $", dinero(tarifa), "MXN")
+            print("Descuento:      $", dinero(descuento), "MXN")
+            print("Monto a pagar:  $", dinero(precio), "MXN")
+            print(SEPARADOR)
+
+            total = total + precio
+
+            otro = leer_si_no("¿Deseas agregar otro visitante? (SI/NO): ")
+
+        print()
+        print(LINEA)
+        print("                RESUMEN")
+        print(LINEA)
+        print("Total de visitantes:", numero)
+        print(SEPARADOR)
+        print("TOTAL A PAGAR: $", dinero(total), "MXN")
+        print(LINEA)
+
+        print()
+        repetir = leer_si_no("¿Deseas hacer otro cálculo de entradas? (SI/NO): ")
+
+
+def registro_ventas():
+    print()
+    print(LINEA)
+    print("         VENTAS DE CINCO DÍAS")
+    print(LINEA)
+
+    otro = "SI"
+
+    while otro == "SI":
+        total1 = 0
+        total2 = 0
+        total3 = 0
+        total4 = 0
+        total5 = 0
+        cantidad = 0
+        hubo_venta_grande = False
+
+        for dia in range(1, 6):
+            print()
+            print(SEPARADOR)
+            print("Día", dia)
+            print(SEPARADOR)
+            total_dia = 0
+
+            importe = leer_decimal("Importe de la venta (0 para terminar): $")
+
+            while importe != 0:
+                total_dia = total_dia + importe
+                cantidad = cantidad + 1
+
+                if importe >= 1000:
+                    hubo_venta_grande = True
+
+                importe = leer_decimal("Importe de la venta (0 para terminar): $")
+
+            if dia == 1:
+                total1 = total_dia
+            if dia == 2:
+                total2 = total_dia
+            if dia == 3:
+                total3 = total_dia
+            if dia == 4:
+                total4 = total_dia
+            if dia == 5:
+                total5 = total_dia
+
+        print()
+        print(LINEA)
+        print("            VENTAS POR DÍA")
+        print(LINEA)
+        print("Día 1: $", dinero(total1))
+        print(SEPARADOR)
+        print("Día 2: $", dinero(total2))
+        print(SEPARADOR)
+        print("Día 3: $", dinero(total3))
+        print(SEPARADOR)
+        print("Día 4: $", dinero(total4))
+        print(SEPARADOR)
+        print("Día 5: $", dinero(total5))
+        print(LINEA)
+
+        mayor_total = total1
+        dia_mayor = 1
+
+        if total2 > mayor_total:
+            mayor_total = total2
+            dia_mayor = 2
+
+        if total3 > mayor_total:
+            mayor_total = total3
+            dia_mayor = 3
+
+        if total4 > mayor_total:
+            mayor_total = total4
+            dia_mayor = 4
+
+        if total5 > mayor_total:
+            mayor_total = total5
+            dia_mayor = 5
+
+        print()
+        print(LINEA)
+        print("         DÍA CON MAYOR TOTAL")
+        print(LINEA)
+        print("Día", dia_mayor)
+        print("Total: $", dinero(mayor_total))
+        print(LINEA)
+
+        total_vendido = total1 + total2 + total3 + total4 + total5
+
+        print()
+        print(LINEA)
+        print("             ESTADÍSTICAS")
+        print(LINEA)
+        print("Ventas registradas:", cantidad)
+        print("Total vendido:     $", dinero(total_vendido))
+        print(SEPARADOR)
+
+        if cantidad == 0:
+            print("No existe un promedio calculable.")
+        else:
+            promedio = total_vendido / cantidad
+            print("Promedio por venta: $", dinero(promedio))
+
+        print(SEPARADOR)
+
+        if hubo_venta_grande == True:
+            print("¿Hubo ventas de $1,000 o más? SI")
+        else:
+            print("¿Hubo ventas de $1,000 o más? NO")
+
+        print(LINEA)
+
+        print()
+        otro = leer_si_no("¿Deseas hacer otro registro de ventas? (SI/NO): ")
+
+
+def calcular_consumo(lectura_anterior, lectura_actual):
+    return lectura_actual - lectura_anterior
+
+
+def calcular_costo_consumo(consumo):
+    return consumo * TARIFA_KWH
+
+
+def calcular_importe(consumo):
+    return calcular_costo_consumo(consumo) + CUOTA_FIJA
+
+
+def clasificar_consumo(consumo):
+    if consumo <= LIMITE_BAJO:
+        return "bajo"
+
+    elif consumo <= LIMITE_MEDIO:
+        return "medio"
+
+    else:
+        return "alto"
+
+
+def mostrar_recibo(lectura_anterior, lectura_actual, consumo, costo,
+                   importe, nivel):
+
+    print()
+    print(LINEA)
+    print("        RECIBO DE ELECTRICIDAD")
+    print(LINEA)
+    print("Lectura anterior:", dinero(lectura_anterior), "kWh")
+    print("Lectura actual:  ", dinero(lectura_actual), "kWh")
+    print("Consumo:         ", dinero(consumo), "kWh")
+    print("Nivel de consumo:", nivel)
+    print(SEPARADOR)
+    print("Costo del consumo: $", dinero(costo))
+    print("Cuota fija:      $", dinero(CUOTA_FIJA))
+    print(LINEA)
+    print("TOTAL A PAGAR:    $", dinero(importe))
+    print(LINEA)
+
+
+def consumo_electrico():
+    print()
+    print(LINEA)
+    print("    CALCULADORA DE CONSUMO ELÉCTRICO")
+    print(LINEA)
+
+    otro = "SI"
+
+    while otro == "SI":
+        print()
+        print(SEPARADOR)
+        print("Lecturas del medidor")
+        print(SEPARADOR)
+
+        anterior = leer_decimal("Lectura anterior (kWh): ")
+        actual = leer_decimal("Lectura actual (kWh): ")
+
+        while actual < anterior:
+            print("Error: la lectura actual no puede ser menor que la anterior.")
+            actual = leer_decimal("Lectura actual (kWh): ")
+
+        consumo = calcular_consumo(anterior, actual)
+        costo = calcular_costo_consumo(consumo)
+        importe = calcular_importe(consumo)
+        nivel = clasificar_consumo(consumo)
+
+        mostrar_recibo(anterior, actual, consumo, costo, importe, nivel)
+
+        print()
+        otro = leer_si_no("¿Deseas calcular otro recibo? (SI/NO): ")
+
+
+def main():
+    opcion = ""
+
+    while opcion != "0":
+        mostrar_menu()
+        opcion = input("Seleccione una opción: ")
+
+        if opcion == "1":
+            cotizador()
+
+        elif opcion == "2":
+            tarifas_museo()
+
+        elif opcion == "3":
+            registro_ventas()
+
+        elif opcion == "4":
+            consumo_electrico()
+
+        elif opcion == "0":
+            print()
+            print(LINEA)
+            print("   Programa finalizado. ¡Hasta luego!")
+            print(LINEA)
+
+        else:
+            print()
+            print(SEPARADOR)
+            print("Error: opción inválida. Elige un número del 0 al 4.")
+            print(SEPARADOR)
+
+
+main()
